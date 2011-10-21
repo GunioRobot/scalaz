@@ -2,7 +2,7 @@ package scalaz
 
 sealed trait BigIntW extends PimpedType[BigInt] {
   import Scalaz._
-  
+
   def ∏ : BigIntMultiplication = multiplication(value)
 }
 

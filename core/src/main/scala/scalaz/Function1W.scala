@@ -15,12 +15,12 @@ sealed trait Function1W[T, R] {
 
   import concurrent.Strategy
   import concurrent.Promise
-  
+
   def promise(implicit s: Strategy): Kleisli[Promise, T, R] = kleisli[Promise]
 
   def lift[F[_]](implicit f: Functor[F]): (F[T]) => F[R] = (x: F[T]) => x.map(this)
 
-  def toValidation[E](error: => E)(implicit ev: R <:< Boolean): T => Validation[NonEmptyList[E], T] = (t: T) => (k(t): Boolean).option(t).toSuccess(error.wrapNel); 
+  def toValidation[E](error: => E)(implicit ev: R <:< Boolean): T => Validation[NonEmptyList[E], T] = (t: T) => (k(t): Boolean).option(t).toSuccess(error.wrapNel);
 
   def byName: (=> T) => R = t => k(t)
 

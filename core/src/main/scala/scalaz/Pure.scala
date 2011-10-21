@@ -108,11 +108,11 @@ object Pure {
   implicit def FirstOptionPure: Pure[FirstOption] = new Pure[FirstOption] {
     def pure[A](a: => A) = Some(a).fst
   }
-  
+
   implicit def LastOptionPure: Pure[LastOption] = new Pure[LastOption] {
     def pure[A](a: => A) = Some(a).lst
   }
-  
+
   implicit def LazyOptionPure: Pure[LazyOption] = new Pure[LazyOption] {
     def pure[A](a: => A) = LazyOption.some(a)
   }
@@ -120,7 +120,7 @@ object Pure {
   implicit def FirstLazyOptionPure: Pure[FirstLazyOption] = new Pure[FirstLazyOption] {
     def pure[A](a: => A) = LazyOption.some(a).fst
   }
-  
+
   implicit def LastLazyOptionPure: Pure[LastLazyOption] = new Pure[LastLazyOption] {
     def pure[A](a: => A) = LazyOption.some(a).lst
   }
@@ -165,7 +165,7 @@ object Pure {
   implicit def ValidationFailurePure[X]: Pure[({type λ[α]=FailProjection[α, X]})#λ] = new Pure[({type λ[α]=FailProjection[α, X]})#λ] {
     def pure[A](a: => A) = Failure(a).fail
   }
-  
+
   implicit def IterVPure[E] = new Pure[({type λ[α]=IterV[E, α]})#λ] {
     import IterV._
     def pure[A](a: => A) = Done(a, Empty[E])

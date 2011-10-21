@@ -28,7 +28,7 @@ trait SemigroupLow {
       implicit val cbf = implicitly[CanBuildAnySelf[CC]].builder[X, X]
       s1 ++ s2
     }
-  }  
+  }
 }
 
 object Semigroup extends SemigroupLow {
@@ -90,7 +90,7 @@ object Semigroup extends SemigroupLow {
   implicit def NodeSeqSemigroup: Semigroup[NodeSeq] = semigroup(_ ++ _)
 
   implicit def NonEmptyListSemigroup[A]: Semigroup[NonEmptyList[A]] = semigroup(_.list <::: _)
-  
+
   implicit def ZipStreamSemigroup[A]: Semigroup[ZipStream[A]] = semigroup(_.value append _.value ʐ)
 
   implicit def StreamSemigroup[A]: Semigroup[Stream[A]] = semigroup(_ append _)
@@ -156,7 +156,7 @@ object Semigroup extends SemigroupLow {
 
   implicit def MapSemigroup[K, V](implicit ss: Semigroup[V]): Semigroup[Map[K, V]] = semigroup {
     (m1, m2) => {
-      // semigroups are not commutative, so order may matter. 
+      // semigroups are not commutative, so order may matter.
       val (from, to, semigroup) = {
         if (m1.size > m2.size) (m2, m1, ss.append(_: V, _: V))
         else (m1, m2, (ss.append(_: V, _: V)).flip)
@@ -170,7 +170,7 @@ object Semigroup extends SemigroupLow {
 
 
   import concurrent.Strategy
-  
+
   implicit def StrategySemigroup: Semigroup[Strategy] =
     semigroup((x, y) => new Strategy {
       def apply[A](a: => A) = x(y.apply(a).apply)

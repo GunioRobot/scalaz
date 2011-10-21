@@ -91,7 +91,7 @@ sealed trait FailProjection[+E, +A] {
     case Success(_) => None
     case Failure(e) => Some(e)
   }
-  
+
   def lift[M[_]: Pure, EE >: E]: Validation[M[EE], A] = validation match {
     case Success(a) => Success(a)
     case Failure(e) => Failure((e: EE) η)
@@ -129,7 +129,7 @@ trait Validations {
 
 object Validation {
   import Scalaz._
-  
+
   /**
    * This instance is inconsistent with the Applicative instance for Validation -- errors are *not*
    * accumulated. Consider using Either or Either.RightProjection instead.

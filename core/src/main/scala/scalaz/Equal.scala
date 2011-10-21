@@ -5,7 +5,7 @@ package scalaz
  * <p/>
  * For example:
  * <pre>
- *   (1 ≟ 0) ≟ false 
+ *   (1 ≟ 0) ≟ false
  *   (List("1") ≟ List("1")) ≟ true
  *   (1 ≟ "1") // compile error
  *   (1 ≟ 0L) // compile error
@@ -200,7 +200,7 @@ object Equal extends EqualLow {
   import concurrent.Promise
   implicit def PromiseEqual[A: Equal]: Equal[Promise[A]] =
     equal[Promise[A]]((a1, a2) => a1.get ≟ a2.get)
-  
+
   def IterableEqual[CC[X] <: Iterable[X], A: Equal]: Equal[CC[A]] = equal((a1, a2) => {
     val i1 = a1.iterator
     val i2 = a2.iterator

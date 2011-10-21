@@ -17,7 +17,7 @@ trait Bifunctor[F[_, _]] {
 
 object Bifunctor {
   import Scalaz._
-  
+
   implicit def Tuple2Bifunctor: Bifunctor[Tuple2] = new Bifunctor[Tuple2] {
     def bimap[A, B, C, D](k: (A, B), f: A => C, g: B => D) =
       (f(k._1), g(k._2))

@@ -22,7 +22,7 @@ sealed trait IO[A] {
   })
 
   /** Executes the handler if an exception is raised. */
-  def except(handler: Throwable => IO[A]): IO[A] = 
+  def except(handler: Throwable => IO[A]): IO[A] =
     IO(rw => try { this(rw) } catch { case e => handler(e)(rw) })
 
   /**
@@ -81,8 +81,8 @@ sealed trait IO[A] {
 
 }
 
-/** 
- * A mutable reference in the IO monad. Note that unsafePerformIO will allow leaking 
+/**
+ * A mutable reference in the IO monad. Note that unsafePerformIO will allow leaking
  * such a reference out of the monad, but any operations on a leaked reference are still monadic.
  */
 class IORef[A](val value: STRef[RealWorld, A]) extends NewType[STRef[RealWorld, A]] {
@@ -104,6 +104,6 @@ object IO {
   }
 
   implicit val ioFunctor: Functor[IO] = new Functor[IO] {
-    def fmap[A, B](io: IO[A], f: A => B): IO[B] = io map f 
+    def fmap[A, B](io: IO[A], f: A => B): IO[B] = io map f
   }
 }

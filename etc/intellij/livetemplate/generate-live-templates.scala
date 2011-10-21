@@ -26,7 +26,7 @@ def method(shortcut: String, name: String, params: Param*): List[Template] = {
   val vars = varNames.map(Variable(_))
   val dotTemplate = Template("." + shortcut, dotValue, name, vars)
   val template = Template(shortcut, name + " " + varNamesDelimited.mkString(" "), name, vars)
-  
+
   if (name.endsWith(":"))
     List(template)
   else if (params.size <= 1)

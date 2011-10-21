@@ -38,7 +38,7 @@ sealed trait Line {
    * Returns a request line with the given URI and this method and version.
    */
   def apply(u: Uri): Line = line(method, u, version)
-  
+
   /**
    * Returns a request line with the given version and this method and URI.
    */

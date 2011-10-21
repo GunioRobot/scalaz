@@ -6,7 +6,7 @@ trait Index[-I[_]] {
 
 object Index {
   import Scalaz._
-  
+
   implicit def IdentityIndex: Index[Identity] = new Index[Identity] {
     def index[A](a: Identity[A], i: Int) = if(i == 0) Some(a.value) else None
   }

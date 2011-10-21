@@ -60,7 +60,7 @@ trait Bodys {
    */
   implicit def XhtmlDoctypeStreamBody(implicit c: CharSet): Body[Stream, xhtml.Doctype] = body[Stream](_.asString.getBytes(c.value).toStream)
 
-  
+
 //  /**
 //   * The contravariant implementation for a body.
 //   */

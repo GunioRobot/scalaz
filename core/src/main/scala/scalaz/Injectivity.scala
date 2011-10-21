@@ -1,17 +1,17 @@
 package scalaz
 
-/** Given Injective[Foo]: If type Foo[A] = Foo[B] then A ~ B 
+/** Given Injective[Foo]: If type Foo[A] = Foo[B] then A ~ B
   *
   * This represents an assertion that is used by other code that requires this condition.
-  * 
+  *
   */
-case class Injective [T[_]]() 
+case class Injective [T[_]]()
 case class Injective2[T[_,_]]()
 case class Injective3[T[_,_,_]]()
 case class Injective4[T[_,_,_,_]]()
 case class Injective5[T[_,_,_,_,_]]()
 
-object Injectivity { 
+object Injectivity {
   implicit def CellInjective       = Injective[Cell]
   implicit def EitherInjective     = Injective2[Either]
   implicit def EitherRightProjectionInjective = Injective2[Either.RightProjection]

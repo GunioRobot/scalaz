@@ -79,12 +79,12 @@ sealed trait Request[IN[_]] {
    * The user-agent request header value.
    */
   def userAgent = this(UserAgent)
-  
+
   /**
    * A map of request header values offering optimal seek time.
    */
   lazy val headersMap = asHashMap[List, NonEmptyList](headers)
-  
+
   /**
    * A map of the first request header values offering optimal seek time.
    */
@@ -260,7 +260,7 @@ sealed trait Request[IN[_]] {
    * Returns the path extension - characters after the last dot (.) in the path.
    */
   def pathExtension = line.uri.pathExtension
-  
+
   /**
    * Returns the components of the path split by '/', stripped of empty components
    */
@@ -300,10 +300,10 @@ sealed trait Request[IN[_]] {
   /**
    * Returns <code>true</code> if the request path starts with the given value.
    */
-  def pathStartsWith(s: String) = path.mkString startsWith s 
+  def pathStartsWith(s: String) = path.mkString startsWith s
 
   /**
-   * Returns <code>true</code> if the query string of the request URI equals the given value. 
+   * Returns <code>true</code> if the query string of the request URI equals the given value.
    */
   def queryStringEquals(s: String) = queryString(_.mkString == s)
 
@@ -345,7 +345,7 @@ sealed trait Request[IN[_]] {
   /**
    * Inspects the user-agent header to determine if the request was made by Microsoft Internet Explorer.
    */
-  def isInternetExplorer = this(UserAgent).mkString.toLowerCase contains "msie" 
+  def isInternetExplorer = this(UserAgent).mkString.toLowerCase contains "msie"
 
   import response._
 
@@ -354,7 +354,7 @@ sealed trait Request[IN[_]] {
   }
 
   /**
-   * Create a response that details the parts of the request in a XHTML document. 
+   * Create a response that details the parts of the request in a XHTML document.
    */
   def debug[OUT[_]] = new Debug[OUT] {
     def apply[A](f: IN[Byte] => A)(implicit e: Empty[OUT], b: Body[OUT, xml.Elem], s: Semigroup[OUT[Byte]]) = {
@@ -400,7 +400,7 @@ sealed trait Request[IN[_]] {
             }
             </div>
           </body>
-        </html>      
+        </html>
     }
   }
 }

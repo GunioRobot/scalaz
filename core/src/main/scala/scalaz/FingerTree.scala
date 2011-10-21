@@ -299,7 +299,7 @@ sealed abstract class Node[V, A](implicit r: Reducer[A, V]) {
     (_, a1, a2, a3) => Iterator(a3, a2, a1))
 
   private implicit def sg: Semigroup[V] = r.monoid
-  
+
   private[scalaz] def split1(pred: V => Boolean, accV: V): (Option[Finger[V, A]], A, Option[Finger[V, A]]) = fold(
     (v, a1, a2) => {
       val va1 = r.unit(a1)
@@ -649,7 +649,7 @@ sealed abstract class FingerTree[V, A](implicit measurer: Reducer[A, V]) {
 
   def iterator: Iterator[A] = fold(
     _ => Iterator.empty,
-    (_, x) => Iterator.single(x),                                           
+    (_, x) => Iterator.single(x),
     (_, pr, m, sf) => pr.iterator ++ m.iterator.flatMap(_.iterator) ++ sf.iterator)
 
   def reverseIterator: Iterator[A] = fold(
@@ -660,7 +660,7 @@ sealed abstract class FingerTree[V, A](implicit measurer: Reducer[A, V]) {
   import scala.collection.immutable.Stream
   import scala.collection.immutable.Stream._
 
-  def toStream: Stream[A] = map(x => x)(StreamReducer[A]).measure 
+  def toStream: Stream[A] = map(x => x)(StreamReducer[A]).measure
   def toList: List[A] = toStream.toList
 
   import FingerTree._
@@ -733,16 +733,16 @@ object FingerTree {
     Reducer((a: FingerTree[V, A]) => a.fold(v => v, (v, x) => v, (v, x, y, z) => v))
   }
 
-  def one[V, A](a: => A)(implicit measure: Reducer[A, V]) = 
+  def one[V, A](a: => A)(implicit measure: Reducer[A, V]) =
     One(a.unit[V], a)
 
-  def two[V, A](a1: => A, a2: => A)(implicit measure: Reducer[A, V]) = 
+  def two[V, A](a1: => A, a2: => A)(implicit measure: Reducer[A, V]) =
     Two(a1.unit[V] snoc a2, a1, a2)
 
-  def three[V, A](a1: => A, a2: => A, a3: => A)(implicit measure: Reducer[A, V]) = 
+  def three[V, A](a1: => A, a2: => A, a3: => A)(implicit measure: Reducer[A, V]) =
     Three(a1.unit[V] snoc a2 snoc a3, a1, a2, a3)
 
-  def four[V, A](a1: => A, a2: => A, a3: => A, a4: => A)(implicit measure: Reducer[A, V]) = 
+  def four[V, A](a1: => A, a2: => A, a3: => A, a4: => A)(implicit measure: Reducer[A, V]) =
     Four(a1.unit[V] snoc a2 snoc a3 snoc a4, a1, a2, a3, a4)
 
   def node2[V, A](a: => A, b: => A)(implicit measure: Reducer[A, V]) =
@@ -771,7 +771,7 @@ def single[V, A](a: => A)(implicit ms: Reducer[A, V]): FingerTree[V, A] = single
   }
 
   def deep[V, A](v: V, pr: Finger[V, A], m: => FingerTree[V, Node[V, A]], sf: Finger[V, A])
-             (implicit ms: Reducer[A, V]): FingerTree[V, A] = 
+             (implicit ms: Reducer[A, V]): FingerTree[V, A] =
     new FingerTree[V, A] {
       implicit val nodeMeasure = NodeMeasure[A, V]
       lazy val mz = m
@@ -819,7 +819,7 @@ def single[V, A](a: => A)(implicit ms: Reducer[A, V]): FingerTree[V, A] = single
       implicit def sizer = Reducer((arr: ImmutableArray[A]) => arr.length)
 
       def length = value.measure
-      
+
       def apply(i: Int): A = {
         val split = value.split(_ > i)
         split._2.viewl.headOption.getOrElse(error("Index " + i + " > " + value.measure))(i - split._1.value.measure)
@@ -860,7 +860,7 @@ def single[V, A](a: => A)(implicit ms: Reducer[A, V]): FingerTree[V, A] = single
       def :+(x: A) = this ::+ IA.fromArray(Array(x))
 
       def +:(x: A) = IA.fromArray(Array(x)) +:: this
-      
+
       def tail = rope(value.tail)
       def init = rope(value.init)
 //      def map[B](f: A => B) = rope(value map f)
@@ -873,7 +873,7 @@ def single[V, A](a: => A)(implicit ms: Reducer[A, V]): FingerTree[V, A] = single
       def reverseIterator: Iterator[A] = value.reverseIterator.flatMap(_.reverseIterator)
 
       // TODO override def reverse
-      
+
       def chunks = value.toStream
 
       // protected[this] override def newBuilder: Builder[A, Rope[A]] = new RopeBuilder[A]
@@ -900,7 +900,7 @@ def single[V, A](a: => A)(implicit ms: Reducer[A, V]): FingerTree[V, A] = single
           def apply: Builder[T, Rope[T]] = newBuilder[T]
         }
     }
-    
+
     def rope[A : ClassManifest](v: FingerTreeIntPlus[ImmutableArray[A]]) = new Rope[A](v)
 
     sealed class WrappedRope[A : ClassManifest](val value: Rope[A])
@@ -910,7 +910,7 @@ def single[V, A](a: => A)(implicit ms: Reducer[A, V]): FingerTree[V, A] = single
       def apply(i: Int): A = value(i)
 
       def ++(xs: WrappedRope[A]) = wrapRope(value ++ xs.value)
-      
+
       // override def :+(x: A) = wrapRope(value :+ x)
       // override def +:(x: A) = wrapRope(x +: value)
       override def tail = rope(value.tail)
@@ -1034,7 +1034,7 @@ def single[V, A](a: => A)(implicit ms: Reducer[A, V]): FingerTree[V, A] = single
 
     object IndSeq {
       def apply[A](as: A*) = fromSeq(as)
-      def fromSeq[A](as: Seq[A]) = indSeq(as.foldLeft(empty[Int, A](Reducer(a => 1)))((x, y) => x :+ y)) 
+      def fromSeq[A](as: Seq[A]) = indSeq(as.foldLeft(empty[Int, A](Reducer(a => 1)))((x, y) => x :+ y))
     }
   }
 

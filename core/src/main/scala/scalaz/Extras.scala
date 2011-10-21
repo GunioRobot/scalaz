@@ -32,7 +32,7 @@ trait Biff[P[_,_], F[_], G[_]] {
   type Apply[A, B] = P[F[A], G[B]]
 }
 
-trait On[P[_,_], F[_]] { 
+trait On[P[_,_], F[_]] {
   type Apply[A, B] = P[F[A], F[B]]
 }
 

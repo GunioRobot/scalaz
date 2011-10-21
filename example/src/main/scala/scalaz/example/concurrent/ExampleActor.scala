@@ -19,7 +19,7 @@ object ExampleActor {
 
     implicit val executor = Executors.newFixedThreadPool(5)
     import Strategy.Executor
-    
+
     val chatServer = actor[Event] {
       (e: Event) => e match {
         case Login(user) => ("user: " + user + " logged in.").println

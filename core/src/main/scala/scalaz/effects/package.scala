@@ -5,7 +5,7 @@ import java.io._
 package object effects {
 
   import Scalaz._
-  
+
   private[effects] val realWorld = World[RealWorld]()
 
   /** Put a value in a state thread */
@@ -31,7 +31,7 @@ package object effects {
   })
 
   /** Accumulates an integer-associated list into an immutable array. */
-  def accumArray[F[_]:Foldable, A: Manifest, B](size: Int, f: (A, B) => A, z: A, ivs: F[(Int, B)]): ImmutableArray[A] = { 
+  def accumArray[F[_]:Foldable, A: Manifest, B](size: Int, f: (A, B) => A, z: A, ivs: F[(Int, B)]): ImmutableArray[A] = {
     type STA[S] = ST[S, ImmutableArray[A]]
     runST(new Forall[STA] {
       def apply[S] = for {
@@ -60,7 +60,7 @@ package object effects {
   // Implicit conversions between IO and ST
   implicit def stToIO[A](st: ST[RealWorld, A]): IO[A] = IO(st(_))
   implicit def ioToST[A](io: IO[A]): ST[RealWorld, A] = ST(io(_))
- 
+
   /** Perform the given side-effect in an IO action */
   def io[A](a: => A) = a.pure[IO]
 

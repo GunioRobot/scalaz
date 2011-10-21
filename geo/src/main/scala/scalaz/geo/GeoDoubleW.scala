@@ -4,7 +4,7 @@ package geo
 
 sealed trait GeoDoubleW extends PimpedType[Double] {
   import Scalaz._
-  import Geo._  
+  import Geo._
 
   def fromRadians[A](implicit r: Radians[A]) = r.fromRadians(value)
 

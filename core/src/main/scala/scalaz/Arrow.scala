@@ -2,7 +2,7 @@ package scalaz
 
 trait Arrow[A[_, _]] {
   val category: Category[A]
-  
+
   def arrow[B, C](f: B => C): A[B, C]
 
   def first[B, C, D](a: A[B, C]): A[(B, D), (C, D)]
@@ -12,10 +12,10 @@ trait Arrow[A[_, _]] {
 
 object Arrow {
   import Scalaz._
-  
+
   implicit def Function1Arrow: Arrow[Function1] = new Arrow[Function1] {
     val category = Category.Function1Category
-    
+
     def arrow[B, C](f: B => C) = f
 
     def first[B, C, D](a: B => C) =

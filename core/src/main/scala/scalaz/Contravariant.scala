@@ -12,7 +12,7 @@ package scalaz
  */
 trait Contravariant[F[_]] extends InvariantFunctor[F] {
   def contramap[A, B](r: F[A], f: B => A): F[B]
-  
+
   final def xmap[A,B](ma: F[A], f: A => B, g: B => A): F[B] = contramap(ma, g)
 }
 

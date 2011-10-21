@@ -17,7 +17,7 @@ sealed trait HttpServlet {
   val servlet: javax.servlet.http.HttpServlet
 
   /**
-   * Returns a potential resource loaded with using the servlet container. 
+   * Returns a potential resource loaded with using the servlet container.
    */
   def resource(path: String) = Option(servlet.getServletContext.getResourceAsStream(path)) map (x => x)
 }

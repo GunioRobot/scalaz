@@ -11,7 +11,7 @@ object ExampleFold {
     // Folding left over a List
     (List(1, 2, 3).foldl("0")((a, b) => "f(" + a.toString + ", " + b + ")")) assert_=== "f(f(f(0, 1), 2), 3)"
 
-    // Folding right over a List    
+    // Folding right over a List
     (List(1, 2, 3).foldr("0")((a, b) => "f(" + a.toString + ", " + b + ")")) assert_=== "f(1, f(2, f(3, 0)))"
 
     // Folding left over a List

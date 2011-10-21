@@ -2,7 +2,7 @@ package scalaz
 
 sealed trait CharW extends PimpedType[Char] {
   import Scalaz._
-  
+
   def ∏ : CharMultiplication = multiplication(value)
 
   def digit : Option[Digit] = digits find (_.toChar == value)

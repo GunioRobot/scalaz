@@ -45,7 +45,7 @@ trait Ellipsoids {
 
 object Ellipsoid {
   import Scalaz._
-  
+
   implicit def EllipsoidShow: Show[Ellipsoid] = showBy(e => (e.semiMajor, e.semiMinor, e.flattening, e.inverseFlattening))
 
   implicit def EllipsoidEqual: Equal[Ellipsoid] = equalBy(e => (e.semiMajor, e.semiMinor, e.

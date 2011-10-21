@@ -27,7 +27,7 @@ object ExampleApplicative {
       // Apply the Function Applicative functor to produce a function that lifts conjunction
       // i.e. x => if(x < 15 && x % 2 == 0) without repeating the application to x.
       val z = ((_: Int) > 15) <*> (((_: Int) % 2 == 0) ∘ ((_: Boolean) ∧ (_: Boolean)).curried)
-      
+
       List(7, 8, 14, 15, 16, 20, 21) ∘ z assert_=== List(false,false,false,false,true,true,false)
     }
 

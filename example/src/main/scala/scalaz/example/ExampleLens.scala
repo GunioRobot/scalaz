@@ -18,7 +18,7 @@ object ExampleLens {
 
   val modBoth = (salary *** name) mod ((harry, tom), {
     case (s, n) => (s + 100, n + " Jones")
-  }) // (Employee("Harry", 5100), Employee("Tom Jones", 4000))  
+  }) // (Employee("Harry", 5100), Employee("Tom Jones", 4000))
 
   val modMonadically = for {
     _ <- salary += 100
@@ -28,5 +28,5 @@ object ExampleLens {
   } yield e
 
   val tomJones = modMonadically ! tom // Employee("Tom Jones", 4100)
-  
+
 }

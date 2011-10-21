@@ -60,7 +60,7 @@ object ExampleTraverse {
     // Traverse an Option using the Int multiplication monoid
     (none[Long].foldMapDefault(x => x ∏)).value assert_=== 1L
 
-    // Traverse (collapse) a List using the Int addition monoid    
+    // Traverse (collapse) a List using the Int addition monoid
     List(100, 200, 300).collapse assert_=== 600
   }
 }

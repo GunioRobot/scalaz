@@ -51,11 +51,11 @@ object FlashFilter {
    * Sets the value to be used in the next request using the session.
    */
   def flashSet[A](v: A)(implicit r: HttpServletRequest) {
-    r.session(flashParameter) = v 
+    r.session(flashParameter) = v
   }
 
   /**
-   * Gets the value from the request that was previously set if there is one. 
+   * Gets the value from the request that was previously set if there is one.
    */
   def flashGet[A](implicit r: HttpServletRequest) = r attr flashParameter map (_.asInstanceOf[A])
 }

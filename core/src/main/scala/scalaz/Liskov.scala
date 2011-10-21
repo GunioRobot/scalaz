@@ -43,7 +43,7 @@ object Liskov {
   /**Subtyping is transitive */
   def trans[A, B, C](f: B <~< C, g: A <~< B): A <~< C =
     g.subst[({type λ[-α]= α <~< C})#λ](f)
-  
+
 
   /**Subtyping forms a category */
   implicit def LiskovCategory: Category[<~<] = new Category[<~<] {
@@ -123,10 +123,10 @@ object Liskov {
   def contra[T[-_], A, A2](a: A <~< A2): (T[A2] <~< T[A]) =
     a.subst[({type λ[-α]=T[A2] <~< T[α]})#λ](refl)
 
-  // binary 
+  // binary
   def contra1_2[T[-_, _], Z, A, B](a: A <~< Z): (T[Z, B] <~< T[A, B]) =
     a.subst[({type λ[-α]=T[Z, B] <~< T[α, B]})#λ](refl)
-  
+
   def contra2_2[T[_, -_], Z, A, B](a: B <~< Z): (T[A, Z] <~< T[A, B]) =
     a.subst[({type λ[-α]=T[A, Z] <~< T[A, α]})#λ](refl)
 
@@ -152,7 +152,7 @@ object Liskov {
   def contra4_4[T[_, _, _, -_], Z, A, B, C, D](a: D <~< Z): (T[A, B, C, Z] <~< T[A, B, C, D]) =
     a.subst[({type λ[-α]=T[A, B, C, Z] <~< T[A, B, C, α]})#λ](refl)
 
-  /**Lift subtyping into a Function1-like type 
+  /**Lift subtyping into a Function1-like type
    * liftF1(a,r) = contra1_2(a) compose co2_2(b)
    */
   def liftF1[F[-_, +_], A, A2, R, R2](
@@ -164,7 +164,7 @@ object Liskov {
     r.subst[r](a.subst[a](refl))
   }
 
-  /**Lift subtyping into a function 
+  /**Lift subtyping into a function
    * liftF2(a,b,r) = contra1_3(a) compose contra2_3(b) compose co3_3(c)
    */
   def liftF2[F[-_, -_, +_], A, A2, B, B2, R, R2](
@@ -178,7 +178,7 @@ object Liskov {
     r.subst[r](b.subst[b](a.subst[a](refl)))
   }
 
-  /**Lift subtyping into a function 
+  /**Lift subtyping into a function
    * liftF3(a,b,c,r) = contra1_4(a) compose contra2_4(b) compose contra3_4(c) compose co3_4(d)
    */
   def liftF3[F[-_, -_, -_, +_], A, A2, B, B2, C, C2, R, R2](
@@ -210,10 +210,10 @@ object Liskov {
     r.subst[r](d.subst[d](c.subst[c](b.subst[b](a.subst[a](refl)))))
   }
 
-  /**If A <: B and B :> A then A = B 
+  /**If A <: B and B :> A then A = B
 
   def bracket[A,B](
-    ab : A <~< B, 
+    ab : A <~< B,
     ba : A >~> B
   ): Leibniz[A,B] = Leibniz.force[A,B]
 

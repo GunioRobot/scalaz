@@ -8,7 +8,7 @@ sealed trait ElevatedCurve {
   lazy val length = {
     val d = curve.ellipsoidalDistance
     val e = elevation.value
-    scala.math.sqrt(d * d + e * e) 
+    scala.math.sqrt(d * d + e * e)
   }
 }
 
@@ -21,7 +21,7 @@ trait ElevatedCurves {
 
 object ElevatedCurve {
   import Scalaz._
-  
+
   implicit def ElevatedCurveShow: Show[ElevatedCurve] = showBy(((_: ElevatedCurve).curve) &&& ((_: ElevatedCurve).elevation))
 
   implicit def ElevatedCurveEqual: Equal[ElevatedCurve] = equalBy(((_: ElevatedCurve).curve) &&& ((_: ElevatedCurve).elevation))

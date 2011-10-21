@@ -47,7 +47,7 @@ class ImmutableArrayTest extends Specification with Sugar with ScalaCheck {
 
   "Behave like arrays" in {
     def beTheSameSeqAsForIA[A] = beTheSameSeqAs(_: Seq[A]) ^^ (IA.wrapArray(_: ImmutableArray[A]))
-    
+
     "Conversion from array" verifies {(array: Array[Int]) =>
       IA.fromArray(array) must beTheSameSeqAsForIA(array)
     }

@@ -137,7 +137,7 @@ object ImplicitConversionTest {
     i[Monad[({type λ[α]=(R, S, T, U, V, W) => α})#λ]]
     i[Monad[({type λ[α]=Either.LeftProjection[α, X]})#λ]]
     i[Monad[({type λ[α]=Either.RightProjection[X, α]})#λ]]
-    import java.util.Map.Entry    
+    import java.util.Map.Entry
     i[Monad[({type λ[α]=Entry[Int, α]})#λ]]
   }
 
@@ -236,7 +236,7 @@ object ImplicitConversionTest {
     import java.util.Map.Entry
     i[Comonad[({type λ[α]=Entry[A, α]})#λ]]
   }
-  
+
   def strategy {
     i[concurrent.Strategy]
   }

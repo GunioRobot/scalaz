@@ -11,14 +11,14 @@ sealed abstract class Name[+A] {
   def map[B](f: A => B): Name[B] = Name(f(value))
 }
 
-object Name { 
+object Name {
   def apply[A](a: => A) = new Name[A] {
     def value = a
   }
   def unapply[A](v: Name[A]): Option[A] = Some(v.value)
 
   implicit val nameMonad: Monad[Name] = new Monad[Name] {
-    def bind[A,B](v: Name[A], f: A => Name[B]): Name[B] = 
+    def bind[A,B](v: Name[A], f: A => Name[B]): Name[B] =
       f(v.value)
     def pure[A](a: => A) = Name(a)
   }
@@ -33,7 +33,7 @@ trait Names {
   import java.util.Map.Entry
   import java.util.AbstractMap.SimpleImmutableEntry
 
-  import java.util.{List => _, _} 
+  import java.util.{List => _, _}
   import java.util.concurrent._
   import scalaz.concurrent._
 
@@ -66,7 +66,7 @@ trait Names {
   implicit def nameToJavaLinkedList[A] = pureName[LinkedList,A] _
   implicit def nameToJavaPriorityQueue[A] = pureName[PriorityQueue,A] _
   implicit def nameToJavaStack[A] = pureName[Stack,A] _
-  implicit def nameToJavaSynchronousQueue[A] = pureName[SynchronousQueue,A] _  
+  implicit def nameToJavaSynchronousQueue[A] = pureName[SynchronousQueue,A] _
   implicit def nameToJavaTreeSet[A] = pureName[TreeSet,A] _
   implicit def nameToJavaVector[A] = pureName[Vector,A] _
   implicit def nameToLastOption[A] = pureName[LastOption,A] _

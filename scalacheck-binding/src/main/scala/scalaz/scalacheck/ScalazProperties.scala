@@ -44,16 +44,16 @@ object ScalazProperties {
   }
 
   class MonadLaws[M[_]](implicit a: Monad[M], am: Arbitrary[M[Int]], af: Arbitrary[Int => M[Int]], e: Equal[M[Int]])
-        extends Properties("Monad Laws") { 
+        extends Properties("Monad Laws") {
     property("Right identity") = Monad.rightIdentity[M, Int]
     property("Left identity") = Monad.leftIdentity[M, Int, Int]
     property("Associativity") = Monad.associativity[M, Int, Int, Int]
   }
- 
+
   object Monad {
     def rightIdentity[M[_], X](implicit m: Monad[M], e: Equal[M[X]], a: Arbitrary[M[X]]) =
       forAll((a: M[X]) => ((a ∗ ((_: X).η))) ≟ a).label("Right identity")
-    
+
     def leftIdentity[M[_], X, Y](implicit am: Monad[M],
                          emy: Equal[M[Y]],
                          ax: Arbitrary[X],
@@ -80,7 +80,7 @@ object ScalazProperties {
     def identity[F[_], X](implicit f: Applicative[F], afx: Arbitrary[F[X]], ef: Equal[F[X]]) =
       forAll((v: F[X]) => v <*> ((x: X) => x).pure[F] === v)
 
-    def composition[F[_], X, Y, Z](implicit ap: Applicative[F], 
+    def composition[F[_], X, Y, Z](implicit ap: Applicative[F],
                                    afx: Arbitrary[F[X]],
                                    au: Arbitrary[F[Y => Z]],
                                    av: Arbitrary[F[X => Y]],

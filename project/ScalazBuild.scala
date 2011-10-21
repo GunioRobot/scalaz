@@ -170,7 +170,7 @@ object ScalazBuild extends Build {
       (SEALED, "true"))
     )
   )
-  
+
   lazy val publishSetting = publishTo <<= (version) {
     version: String =>
       def repo(name: String) = name at "http://nexus-direct.scala-tools.org/content/repositories/" + name

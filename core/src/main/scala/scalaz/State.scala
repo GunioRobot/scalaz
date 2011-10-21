@@ -4,7 +4,7 @@ sealed trait State[S, +A] {
   def apply(s: S): (S, A)
 
   import Scalaz._
-  
+
   def map[B](f: A => B): State[S, B] = state(apply(_) match {
     case (s, a) => (s, f(a))
   })
@@ -30,7 +30,7 @@ sealed trait StateT[M[_], S, A] {
 
   def !(s: S)(implicit m: Functor[M]): M[A] = apply(s) map (_._2)
   def ~>(s: S)(implicit m: Functor[M]): M[S] = apply(s) map (_._1)
-  def maps[N[_], B](f: M[(S, A)] => N[(S, B)]): StateT[N, S, B] = 
+  def maps[N[_], B](f: M[(S, A)] => N[(S, B)]): StateT[N, S, B] =
     stateT((apply(_)) map f)
   def withs(f: S => S) =
     stateT(f map (apply(_)))
@@ -56,6 +56,6 @@ trait States {
 
   def put[S](s: S) = state[S, Unit](_ => (s, ()))
 
-  def gets[S,A](f: S => A): State[S, A] = 
+  def gets[S,A](f: S => A): State[S, A] =
     for (s <- init) yield f(s)
 }

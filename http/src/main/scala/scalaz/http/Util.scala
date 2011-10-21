@@ -14,7 +14,7 @@ import io.Codec
 object Util {
   /**
    * Splits the given argument by ampersand (<code>&</code>) then each list again by the equals sign (<code>=</code>).
-   * e.g. <code>parameters("a=b&c=d&e=f") == [("a", "b"), ("c", "d"), ("e", "f")]</code> 
+   * e.g. <code>parameters("a=b&c=d&e=f") == [("a", "b"), ("c", "d"), ("e", "f")]</code>
    */
   def parameters(p: List[Char]): List[(List[Char], List[Char])] = {
     val x = p.selectSplit(_ != '&')

@@ -8,9 +8,9 @@ import Scalaz._
  * or right. These specialized reductions may be more efficient in some scenarios
  * and are used when appropriate by a 'Generator'. The names 'cons' and 'snoc' work
  * by analogy to the synonymous operations in the list monoid.
- * 
+ *
  * Minimal definition: 'unit' or 'snoc'
- * 
+ *
  * Based on a Haskell library by Edward Kmett
  */
 abstract class Reducer[C, M](implicit mm: Monoid[M]) {
@@ -74,7 +74,7 @@ trait Reducers {
   def ShortProductReducer: Reducer[Short, ShortMultiplication] = Reducer(x => multiplication(x))
 
   def BigIntProductReducer: Reducer[BigInt, BigIntMultiplication] = Reducer((x: BigInt) => multiplication(x))
- 
+
   import java.math.BigInteger
   def BigIntegerProductReducer: Reducer[BigInteger, BigIntegerMultiplication] = Reducer((x: BigInteger) => multiplication(x))
 

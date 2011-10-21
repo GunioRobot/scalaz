@@ -26,8 +26,8 @@ sealed class Promise[A](implicit val strategy: Strategy) extends Function0[A] {
   def broken = borked
 
   // out of band signal
-  def break { 
-    borked = true 
+  def break {
+    borked = true
     e ! new Break(this)
   }
 
@@ -56,11 +56,11 @@ sealed class Promise[A](implicit val strategy: Strategy) extends Function0[A] {
 }
 
 trait Promises {
-  def promise[A](a: => A)(implicit s: Strategy): Promise[A] = Promise(a) 
+  def promise[A](a: => A)(implicit s: Strategy): Promise[A] = Promise(a)
 }
 
 object Promise {
-  def apply[A](a: => A)(implicit s: Strategy): Promise[A] = { 
+  def apply[A](a: => A)(implicit s: Strategy): Promise[A] = {
     val p = new Promise[A]()(s)
     p.e ! new Done(a, p)
     p
@@ -76,7 +76,7 @@ object Promise {
   private class Thrown(e: Throwable) extends State[Nothing] {
     def get: Nothing = throw e
     def fulfill[B](a: => B, promise: Promise[B]) {
-      // we could allow users to manually fulfill a thrown promise, 
+      // we could allow users to manually fulfill a thrown promise,
       // but this would violate referential transparency. DENIED
       // Unfulfilled.fulfill(a, promise)
     }
@@ -96,12 +96,12 @@ object Promise {
 
     def fulfill[B](a: => B, promise: Promise[B]) {
       if (!promise.borked) {
-        try { 
+        try {
           promise.v = new Fulfilled(a)
           promise.latch.countDown
           val as = promise.waiting
           while (!as.isEmpty) as.remove()(a)
-        } catch { 
+        } catch {
           case e : Throwable => {
             promise.v = new Thrown(e)
             promise.latch.countDown
@@ -116,8 +116,8 @@ object Promise {
       promise.latch.countDown // free the hordes
     }
   }
-  
-  sealed class BrokenException extends Exception 
+
+  sealed class BrokenException extends Exception
 
   private abstract sealed class Signal[+A] {
     def eval: Unit

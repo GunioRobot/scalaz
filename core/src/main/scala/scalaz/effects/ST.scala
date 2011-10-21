@@ -57,7 +57,7 @@ class STArray[S, A:Manifest](val size: Int, z: A) {
   } yield ()
 }
 
-/** 
+/**
  * Purely functional mutable state threads.
  * Based on JL and SPJ's paper "Lazy Functional State Threads"
  */

@@ -5,7 +5,7 @@ sealed trait Latitude {
   val value: Double
 
   import Geo.coord
-  
+
   def |:|(lon: Longitude) = coord(this, lon)
 }
 

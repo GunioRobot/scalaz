@@ -6,7 +6,7 @@ trait Cojoin[M[_]] {
 
 object Cojoin {
   import Scalaz._
-  
+
   implicit def IdentityCojoin: Cojoin[Identity] = new Cojoin[Identity] {
     def cojoin[A](a: Identity[A]) = a
   }

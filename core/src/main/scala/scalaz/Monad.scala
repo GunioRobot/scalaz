@@ -80,7 +80,7 @@ object Monad extends MonadLow {
   implicit def Function6Monad[R, S, T, U, V, W] =
     monad[({type λ[α] = (R, S, T, U, V, W) => α})#λ](Function6Bind, Function6Pure)
 
-  implicit def ResponderMonad[X] = 
+  implicit def ResponderMonad[X] =
     monad[Responder](ResponderBind, ResponderPure)
 
   implicit def EitherLeftMonad[X] =

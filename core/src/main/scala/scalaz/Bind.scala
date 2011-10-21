@@ -163,7 +163,7 @@ object Bind {
       new SimpleImmutableEntry(r.getKey ⊹ e.getKey, e.getValue)
     }
   }
-  
+
   implicit def TreeBind: Bind[Tree] = new Bind[Tree] {
     def bind[A, B](t: Tree[A], f: A => Tree[B]): Tree[B] = {
       val r = f(t.rootLabel)
@@ -175,7 +175,7 @@ object Bind {
   implicit def PromiseBind: Bind[Promise] = new Bind[Promise] {
     def bind[A, B](r: Promise[A], f: A => Promise[B]) = r flatMap f
   }
-  
+
   implicit def IterVBind[E]: Bind[({type λ[α]=IterV[E, α]})#λ] = new Bind[({type λ[α]=IterV[E, α]})#λ] {
     import IterV._
     def bind[A, B](a: IterV[E, A], f: A => IterV[E, B]) = a.fold(

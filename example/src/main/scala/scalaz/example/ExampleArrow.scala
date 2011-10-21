@@ -29,7 +29,7 @@ object ExampleArrow {
       // Perform plus1 on a pair using the Function1 arrow
       plus1.product apply (9, 99) assert_=== (10, 100)
     }
-    
+
     // Kleisli arrow
     {
       val k = ☆((n: List[Int]) => if(n.isEmpty) None else Some(n ∘ (_.shows.reverse)))

@@ -4,7 +4,7 @@ sealed trait BooleanW {
   val isTrue: Boolean
 
   import Scalaz._
-  
+
   def |∧| : BooleanConjunction = conjunction(isTrue)
 
   /**

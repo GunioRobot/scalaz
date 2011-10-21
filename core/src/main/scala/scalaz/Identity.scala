@@ -95,7 +95,7 @@ sealed trait Identity[A] extends Equals with IdentitySugar[A] {
   }
 
   def node(subForest: Tree[A]*): Tree[A] = Scalaz.node(value, subForest.toStream)
-  
+
   def leaf: Tree[A] = Scalaz.leaf(value)
 
   def success[X]: Validation[X, A] = Scalaz.success(value)
@@ -109,7 +109,7 @@ sealed trait Identity[A] extends Equals with IdentitySugar[A] {
   def some: Option[A] = Some(value)
 
   def pair: (A, A) = (value, value)
-  
+
   def squared: (A, A) = pair
 
   def left[B]: Either[A, B] = Left(value)
@@ -165,7 +165,7 @@ sealed trait Identity[A] extends Equals with IdentitySugar[A] {
   def canEqual(o: Any): Boolean = o != null && o.isInstanceOf[Identity[_]]
 }
 
-object Identity { 
+object Identity {
   def apply[A](a: => A): Identity[A] = new Identity[A] {
     lazy val value = a
   }

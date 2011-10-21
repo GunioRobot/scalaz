@@ -6,7 +6,7 @@ sealed class StreamT[M[_],A](stepper: => M[StreamT.Step[A, StreamT[M,A]]]) {
   import StreamT._
   import Scalaz._
 
-  def uncons(implicit M:Monad[M]): M[Option[(A, StreamT[M,A])]] = 
+  def uncons(implicit M:Monad[M]): M[Option[(A, StreamT[M,A])]] =
     step flatMap {
       case Yield(a,s) => M.pure(some((a,s)))
       case Skip(s) => s.uncons
@@ -14,12 +14,12 @@ sealed class StreamT[M[_],A](stepper: => M[StreamT.Step[A, StreamT[M,A]]]) {
     }
   def ::(a: => A)(implicit M:Pure[M]): StreamT[M,A] = StreamT[M,A](M pure (Yield(a, this)))
 
-  def isEmpty(implicit M:Monad[M]) = uncons map { _.isDefined } 
+  def isEmpty(implicit M:Monad[M]) = uncons map { _.isDefined }
   def head(implicit M:Monad[M]) = uncons map { _.get._1 }
-  def tailM(implicit M:Monad[M]): M[StreamT[M,A]] = uncons map { _.get._2 } 
+  def tailM(implicit M:Monad[M]): M[StreamT[M,A]] = uncons map { _.get._2 }
 
   def filter(p: A => Boolean)(implicit M:Functor[M]): StreamT[M,A] = StreamT[M,A](
-    step map { 
+    step map {
       case Yield(a,as) => if (p(a)) Yield(a, as filter p) else Skip(as filter p)
       case Skip(as) => Skip(as filter p)
       case Done => Done
@@ -27,7 +27,7 @@ sealed class StreamT[M[_],A](stepper: => M[StreamT.Step[A, StreamT[M,A]]]) {
   )
 
   def trans[N[_]:Functor](t: M ~> N): StreamT[N,A] = StreamT[N,A](
-    t(step) map { 
+    t(step) map {
       case Yield(a,as) => Yield(a, as trans t)
       case Skip(as) => Skip(as trans t)
       case Done => Done
@@ -35,14 +35,14 @@ sealed class StreamT[M[_],A](stepper: => M[StreamT.Step[A, StreamT[M,A]]]) {
   )
 
   def dropWhile(p: A => Boolean)(implicit M: Functor[M]): StreamT[M,A] = StreamT[M,A](
-    step map { 
+    step map {
       case Yield(a,as) => if (p(a)) Skip(as dropWhile p) else Yield(a,as)
       case Skip(as) => Skip(as dropWhile p)
       case Done => Done
     }
   )
   def takeWhile(p: A => Boolean)(implicit M: Functor[M]): StreamT[M,A] = StreamT[M,A](
-    step map { 
+    step map {
       case Yield(a,as) => if (!p(a)) Done else Yield(a,as takeWhile p)
       case Skip(as) => Skip(as takeWhile p)
       case Done => Done
@@ -50,7 +50,7 @@ sealed class StreamT[M[_],A](stepper: => M[StreamT.Step[A, StreamT[M,A]]]) {
   )
 
   def ++[B>:A](bs: => StreamT[M,B])(implicit M:Functor[M]) : StreamT[M,B] = StreamT[M,B](
-    step map { 
+    step map {
       case Yield(a,as) => Yield(a, as ++ bs)
       case Skip(as) => Skip(as ++ bs)
       case Done => Skip(bs)
@@ -64,7 +64,7 @@ sealed class StreamT[M[_],A](stepper: => M[StreamT.Step[A, StreamT[M,A]]]) {
     }
   )
   def map[B](f: A => B)(implicit M:Functor[M]): StreamT[M,B] = StreamT[M,B](
-    step map { 
+    step map {
       case Yield(a,s) => Yield(f(a), s map f)
       case Skip(s) => Skip(s map f)
       case Done => Done
@@ -72,30 +72,30 @@ sealed class StreamT[M[_],A](stepper: => M[StreamT.Step[A, StreamT[M,A]]]) {
   )
   /** Don't use iteratively! */
   def tail(implicit M:Functor[M]): StreamT[M,A] = StreamT[M,A](
-    step map { 
+    step map {
       case Yield(a,s) => Skip(s)
       case Skip(s) => Skip(s.tail)
       case Done => error("tail: empty StreamT")
     }
   )
-  def foldLeft[B](z: => B)(f: (=> B, => A) => B)(implicit M: Monad[M]): M[B] = 
+  def foldLeft[B](z: => B)(f: (=> B, => A) => B)(implicit M: Monad[M]): M[B] =
     step flatMap {
       case Yield(a,s) => s.foldLeft(f(z,a))(f)
       case Skip(s) => s.foldLeft(z)(f)
       case Done => M pure z
-    } 
+    }
 
   def toStream(implicit M:Monad[M]): M[Stream[A]] = rev(Stream.Empty) map (_.reverse)
 
-  private def rev(xs : Stream[A])(implicit M:Monad[M]): M[Stream[A]] = 
-    step flatMap { 
+  private def rev(xs : Stream[A])(implicit M:Monad[M]): M[Stream[A]] =
+    step flatMap {
       case Yield(a,s) => s rev (Stream.cons(a,xs))
       case Skip(s) => s rev xs
       case Done => M pure xs
     }
-  
+
   def foldRight[B](z: => B)(f: (=> A, => B) => B)(implicit M: Monad[M]): M[B] =
-    rev(Stream.Empty) map { _.foldLeft(z)((a, b) => f(b, a)) } 
+    rev(Stream.Empty) map { _.foldLeft(z)((a, b) => f(b, a)) }
 
   def length(implicit M: Monad[M]) : M[Int] = {
     def addOne(c: => Int, a: => A) = 1 + c
@@ -107,9 +107,9 @@ sealed class StreamT[M[_],A](stepper: => M[StreamT.Step[A, StreamT[M,A]]]) {
     case Skip(s) => s.foreach(f)
     case Done => M.pure(())
   }
-  
+
 }
-object StreamT extends Extras { 
+object StreamT extends Extras {
   def apply[M[_],A](step: => M[Step[A, StreamT[M,A]]]): StreamT[M,A] = new StreamT[M,A](step)
   def empty[M[_],A](implicit M:Pure[M]): StreamT[M,A] = new StreamT[M,A](M pure Done)
 
@@ -137,11 +137,11 @@ object StreamT extends Extras {
   implicit def streamTBind[M[_]:Functor]
     : Bind[({type λ[X] = StreamT[M,X]})#λ] =
   new Bind[({type λ[X] = StreamT[M,X]})#λ] {
-    def bind[A, B](a: StreamT[M,A], f: A => StreamT[M,B]) = a flatMap f 
+    def bind[A, B](a: StreamT[M,A], f: A => StreamT[M,B]) = a flatMap f
   }
   implicit def streamTSemigroup[M[_]:Functor,A]
-    : Semigroup[StreamT[M,A]] = 
-  new Semigroup[StreamT[M,A]] { 
+    : Semigroup[StreamT[M,A]] =
+  new Semigroup[StreamT[M,A]] {
     def append(s1: StreamT[M,A], s2: => StreamT[M,A]) = s1 ++ s2
   }
 
@@ -152,9 +152,9 @@ object StreamT extends Extras {
   }
 
   def runStreamT[S,A](stream : StreamT[({type λ[X] = State[S,X]})#λ,A], s0: S)
-    : StreamT[Id,A] 
+    : StreamT[Id,A]
     = StreamT[Id,A](
-      stream.step(s0) match { 
+      stream.step(s0) match {
         case (s1, Yield(a, as)) => Yield(a, runStreamT(as, s1))
         case (s1, Skip(as)) => Skip(runStreamT(as, s1))
         case (_, Done) => Done

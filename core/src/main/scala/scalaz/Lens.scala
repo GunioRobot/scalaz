@@ -103,7 +103,7 @@ case class Lens[A,B](get: A => B, set: (A,B) => A) extends Immutable {
   def map[C](f: B => C) : State[A,C] = state[A,C](a => (a,f(get(a))))
 }
 
-object Lens { 
+object Lens {
   /** The identity lens for a given object */
   def self[A]    = Lens[A,A](a => a, (_, a) => a)
 
@@ -124,7 +124,7 @@ object Lens {
   /** Lenses form a category */
   implicit def category : Category[Lens] = new Category[Lens] {
     def compose[A,B,C](g: Lens[B,C], f: Lens[A,B]): Lens[A,C] = f andThen g
-    def id[A]: Lens[A,A] = self[A] 
+    def id[A]: Lens[A,A] = self[A]
   }
 
   /** Lenses may be used implicitly as State monadic actions that get the viewed portion of the state */
@@ -137,7 +137,7 @@ object Lens {
     }
 
   /** There exists a generalized functor from Lenses to Function1, which just forgets how to set the value */
-  implicit def generalizedFunctor[A] : GeneralizedFunctor[Lens,Function1,Id] = 
+  implicit def generalizedFunctor[A] : GeneralizedFunctor[Lens,Function1,Id] =
     new GeneralizedFunctor[Lens,Function1,Id] {
       def fmap[A,B](lens: Lens[A,B]) = lens.get
     }
@@ -193,14 +193,14 @@ object Lens {
     Lens[S,G](s => lens.get(s)._7, (s,a) => lens.mod(s, t => t copy (_7 = a)))
   )
 
-  trait WrappedLens[S,A] { 
+  trait WrappedLens[S,A] {
     def lens : Lens[S,A]
   }
 
   /** A lens that views a Subtractable type can provide the appearance of in place mutation */
   implicit def subtractableLens[S,A,Repr <: Subtractable[A,Repr]](
     l : Lens[S,Repr]
-  ) : SubtractableLens[S,A,Repr] = 
+  ) : SubtractableLens[S,A,Repr] =
   new SubtractableLens[S,A,Repr] {
     def lens : Lens[S,Repr] = l
   }
@@ -214,12 +214,12 @@ object Lens {
   /** A lens that views an Addable type can provide the appearance of in place mutation */
   implicit def addableLens[S,A,Repr <: Addable[A,Repr]](
     l: Lens[S,Repr]
-  ) : AddableLens[S,A,Repr] = 
+  ) : AddableLens[S,A,Repr] =
   new AddableLens[S,A,Repr] {
     def lens : Lens[S,Repr] = l
   }
 
-  trait AddableLens[S,A,Repr <: Addable[A, Repr]] extends WrappedLens[S,Repr] { 
+  trait AddableLens[S,A,Repr <: Addable[A, Repr]] extends WrappedLens[S,Repr] {
     def += (elem: A) = lens.mods (_ + elem)
     def += (elem1: A, elem2: A, elems: A*) = lens.mods (_ + elem1 + elem2 ++ elems)
     def ++= (xs: TraversableOnce[A]) = lens.mods (_ ++ xs)
@@ -247,13 +247,13 @@ object Lens {
   case class MapLens[S,K,V](lens: Lens[S,Map[K,V]]) extends SubtractableLens[S,K,Map[K,V]] {
     /** Allows both viewing and setting the value of a member of the map */
     def member(k:K) = Lens[S,Option[V]](
-        s => lens.get(s).get(k), 
+        s => lens.get(s).get(k),
         (s, opt) => lens.mod(s, m => opt.cata(v => m + (k -> v), m - k)))
     /** This lens has undefined behavior when accessing an element not present in the map! */
     def at(k:K)     = Lens[S,V](lens.get(_)(k), (s, v) => lens.mod(s, _ + (k -> v)))
 
     def +=(elem1: (K,V), elem2: (K,V), elems: (K,V)*) = lens.mods (_ + elem1 + elem2 ++ elems)
-    def +=(elem: (K,V)) = lens.mods (_ + elem) 
+    def +=(elem: (K,V)) = lens.mods (_ + elem)
     def ++=(xs: TraversableOnce[(K,V)]) = lens.mods (_ ++ xs)
     def update(key: K, value: V) = lens.mods_(_.updated(key,value))
   }
@@ -269,7 +269,7 @@ object Lens {
 
   /** Provide an imperative-seeming API for stacks viewed through a lens */
   implicit def stackLens[S,A] = StackLens[S,A](_)
-  case class StackLens[S,A](lens: Lens[S,Stack[A]]) { 
+  case class StackLens[S,A](lens: Lens[S,Stack[A]]) {
     def push(elem1: A, elem2: A, elems: A*) = lens.mods_(_ push elem1 push elem2 pushAll elems)
     def push(elem: A) = lens.mods_(_ push elem)
     def pop    = lens.mods_(_.pop)
@@ -283,7 +283,7 @@ object Lens {
   case class QueueLens[S,A](lens: Lens[S,Queue[A]]) {
     def enqueue(elem: A) = lens.mods_(_ enqueue elem)
     def dequeue = lens.modps(_.dequeue.swap)
-    def length = lens.map(_.length) 
+    def length = lens.map(_.length)
   }
 
   /** Provide an imperative-seeming API for arrays viewed through a lens */
@@ -292,7 +292,7 @@ object Lens {
     def at(i : Int) = Lens[S,A](
       s => lens.get(s)(i),
       (s, v) => lens.mod(s, array => {
-        val copy = array.clone() 
+        val copy = array.clone()
         copy.update(i,v)
         copy
       })
@@ -302,7 +302,7 @@ object Lens {
 
   /** Allow the illusion of imperative updates to numbers viewed through a lens */
   implicit def numericLens[S,N:Numeric](lens: Lens[S,N]) = NumericLens[S,N](lens, implicitly[Numeric[N]])
-  case class NumericLens[S,N](lens: Lens[S,N], num : Numeric[N]) { 
+  case class NumericLens[S,N](lens: Lens[S,N], num : Numeric[N]) {
     def +=(that:N) = lens.mods(num.plus(_,that))
     def -=(that:N) = lens.mods(num.minus(_,that))
     def *=(that:N) = lens.mods(num.times(_,that))
@@ -310,13 +310,13 @@ object Lens {
 
   /** Allow the illusion of imperative updates to numbers viewed through a lens */
   implicit def fractionalLens[S,F:Fractional](lens: Lens[S,F]) = FractionalLens[S,F](lens, implicitly[Fractional[F]])
-  case class FractionalLens[S,F](lens: Lens[S,F], frac: Fractional[F]) { 
+  case class FractionalLens[S,F](lens: Lens[S,F], frac: Fractional[F]) {
     def /=(that:F) = lens.mods(frac.div(_,that))
   }
 
   /** Allow the illusion of imperative updates to numbers viewed through a lens */
   implicit def integralLens[S,I:Integral](lens: Lens[S,I]) = IntegralLens[S,I](lens, implicitly[Integral[I]])
-  case class IntegralLens[S,I](lens: Lens[S,I], int: Integral[I]) { 
+  case class IntegralLens[S,I](lens: Lens[S,I], int: Integral[I]) {
     def %=(that:I) = lens.mods(int.quot(_,that))
   }
 }

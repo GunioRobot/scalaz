@@ -32,7 +32,7 @@ trait Multiplications {
   def multiplication(n: Char): CharMultiplication = new CharMultiplication {
     val value = n
   }
-  
+
   def multiplication(n: Int): IntMultiplication = new IntMultiplication {
     val value = n
   }

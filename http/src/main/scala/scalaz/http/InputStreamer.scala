@@ -35,7 +35,7 @@ object InputStreamer {
   implicit val StreamInputStreamer: InputStreamer[Stream] = inputStreamer[Stream](_.stream)
 
   /**
-   * An input-streamer for <code>scala.Iterator</code> that reads off the input-stream. 
+   * An input-streamer for <code>scala.Iterator</code> that reads off the input-stream.
    */
   implicit val IteratorInputStreamer: InputStreamer[Iterator] = inputStreamer[Iterator](_.elements)
 }

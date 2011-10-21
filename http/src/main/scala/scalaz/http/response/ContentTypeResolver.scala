@@ -43,7 +43,7 @@ object ContentTypeResolver {
 
   /**
    * A content-type resolver using the table on the W3C Schools website at
-   * http://www.w3schools.com/media/media_mimeref.asp. 
+   * http://www.w3schools.com/media/media_mimeref.asp.
    */
   val w3cMimeReference = contentTypeResolverMap(Map(
     "323" -> "text/h323",

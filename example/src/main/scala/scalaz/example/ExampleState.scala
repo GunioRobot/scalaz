@@ -19,7 +19,7 @@ object ExampleState {
       /**
        * Label the Leaf nodes of a the tree with increasing integers, traversing
        * left to right. The current value of the label is be explicitly threaded
-       * through the recursion. 
+       * through the recursion.
        */
       def number(seed: Int): (Tree[(A, Int)], Int) = this match {
         case Leaf(x) => (Leaf(x, seed), seed + 1)

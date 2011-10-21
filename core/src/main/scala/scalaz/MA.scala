@@ -58,7 +58,7 @@ trait MA[M[_], A] extends PimpedType[M[A]] with MASugar[M, A] {
   def <|****|>[B, C, D, E](b: M[B], c: M[C], d: M[D], e: M[E])(implicit t: Functor[M], a: Apply[M]): M[(A, B, C, D, E)] = <*****>(b, c, d, e)((_, _, _, _, _))
 
   def xmap[B](f: A => B)(g: B => A)(implicit xf: InvariantFunctor[M]): M[B] = xf.xmap(value, f, g)
-  
+
   def traverse[F[_],B](f: A => F[B])(implicit a: Applicative[F], t: Traverse[M]): F[M[B]] =
     t.traverse(f, value)
 
@@ -276,7 +276,7 @@ trait MA[M[_], A] extends PimpedType[M[A]] with MASugar[M, A] {
 
   import FingerTree._
   def &:(a: A) = OnL[M,A](a, value)
-  
+
   def :&(a: A) = OnR[M,A](value, a)
 
   import concurrent._

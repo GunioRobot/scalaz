@@ -109,7 +109,7 @@ sealed trait TreeLoc[+A] {
       case (acc, xs, 0) => Some((acc, xs))
       case (acc, Stream.cons(x, xs), n) => splitChildren(Stream.cons(x, acc), xs, n - 1)
       case _ => None
-    }  
+    }
 }
 
 trait TreeLocs {

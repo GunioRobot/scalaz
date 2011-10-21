@@ -19,7 +19,7 @@ class BloomFilterTest extends Specification with Sugar with ScalaCheck {
   def genLargeUniformlyDistributedSet: Gen[Set[Int]] =
     listOfN(5000, resize(java.lang.Integer.MAX_VALUE, arbitrary[Int])) ∘ ((_: List[Int]).toSet)
 
-  "filter false negatives" in {    
+  "filter false negatives" in {
     genLargeUniformlyDistributedSet must pass {(is: Set[Int]) =>
       is mustNot beEmpty
       val f = filter(is)
@@ -29,7 +29,7 @@ class BloomFilterTest extends Specification with Sugar with ScalaCheck {
 
   "filter false positive rate" in {
     skip("broken")
-    val testData = genLargeUniformlyDistributedSet <|*|> genLargeUniformlyDistributedSet      
+    val testData = genLargeUniformlyDistributedSet <|*|> genLargeUniformlyDistributedSet
     testData must pass ({
       (inFilter: Set[Int], additional: Set[Int]) => {
         val f = filter(inFilter)

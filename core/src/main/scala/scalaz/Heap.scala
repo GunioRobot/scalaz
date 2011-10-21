@@ -3,11 +3,11 @@ package scalaz
 /** An efficient, asymptotically optimal, implementation of priority queues
   * extended with support for efficient size.
   *
-  * The implementation of 'Heap' is based on bootstrapped skew binomial heaps 
+  * The implementation of 'Heap' is based on bootstrapped skew binomial heaps
   * as described by:
   * G. Brodal and C. Okasaki , "Optimal Purely Functional Priority Queues",
   *    Journal of Functional Programming 6:839-857 (1996),
-  * 
+  *
   * Based on the heaps Haskell library by Edward Kmett
   *
   */
@@ -18,7 +18,7 @@ case class Ranked[A](rank: Int, value: A)
 
 sealed trait Heap[A] {
   import Heap._
-  
+
   def fold[B](empty: => B, nonempty: (Int, (A, A) => Boolean, Tree[Ranked[A]]) => B): B
 
   /** Is the heap empty? O(1)*/
@@ -29,7 +29,7 @@ sealed trait Heap[A] {
 
   /** Insert a new value into the heap. O(1)*/
   def insert(x: A)(implicit o: Order[A]) = insertWith(_ lte _, x)
-  
+
   private def insertWith(f: (A, A) => Boolean, x: A) =
     fold(singletonWith(f, x), (s, _, t) => {
       val y = t.rootLabel.value
@@ -70,7 +70,7 @@ sealed trait Heap[A] {
       }
     })
   }
-  
+
   def adjustMin(f: A => A): Heap[A] = this match {
     case Heap(s, leq, Node(Ranked(r, x), xs)) =>
       Heap(s, leq, heapify(leq)(node(Ranked(r, f(x)), xs)))
@@ -85,7 +85,7 @@ sealed trait Heap[A] {
   def map[B:Order](f: A => B) = fold(Empty[B], (_, _, t) => t.foldMap(x => singleton(f(x.value))))
 
   /** Filter the heap, retaining only values that satisfy the predicate. O(n)*/
-  def filter(p: A => Boolean): Heap[A] = 
+  def filter(p: A => Boolean): Heap[A] =
     fold(Empty[A], (_, leq, t) => t foldMap (x => if (p(x.value)) singletonWith(leq, x.value) else Empty[A]))
 
   /** Partition the heap according to a predicate. The first heap contains all elements that
@@ -104,7 +104,7 @@ sealed trait Heap[A] {
       t foldMap (x => f(x.value))
     })
   }
-  
+
   /** Return a heap consisting of the least n elements of this heap. O(n log n) */
   def take(n: Int) = withList(_.take(n))
 
@@ -129,12 +129,12 @@ sealed trait Heap[A] {
 
   /** Returns a heap consisting of the longest prefix of least elements of this heap that satisfy the predicate.
     * O(n log n) */
-  def takeWhile(p: A => Boolean) = 
+  def takeWhile(p: A => Boolean) =
     withList(_.takeWhile(p))
 
   /** Returns a heap consisting of the longest prefix of least elements of this heap that do not
     * satisfy the predicate. O(n log n) */
-  def dropWhile(p: A => Boolean) = 
+  def dropWhile(p: A => Boolean) =
     withList(_.dropWhile(p))
 
   /** Remove duplicate entries from the heap. O(n log n)*/
@@ -146,7 +146,7 @@ sealed trait Heap[A] {
   })
 
   /** Construct heaps from each element in this heap and union them together into a new heap. O(n)*/
-  def flatMap[B:Order](f: A => Heap[B]): Heap[B] = 
+  def flatMap[B:Order](f: A => Heap[B]): Heap[B] =
     fold(Empty[B], (_, _, t) => t foldMap (x => f(x.value)))
 
   /** Traverse the elements of the heap in sorted order and produce a new heap with applicative effects.
@@ -259,7 +259,7 @@ object Heap {
 
   private def singletonWith[A](f: (A, A) => Boolean, a: A) =
     Heap(1, f, node(Ranked(0, a), Stream()))
-  
+
   /** A heap with one element. */
   def singleton[A:Order](a: A) = singletonWith[A](_ lte _, a)
 

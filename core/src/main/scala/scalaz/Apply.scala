@@ -44,7 +44,7 @@ object Apply extends ApplyLow {
   implicit def Tuple6Apply[R: Monoid, S: Monoid, T: Monoid, U: Monoid, V: Monoid]: Apply[({type λ[α]=(R, S, T, U, V, α)})#λ] = FunctorBindApply[({type λ[α]=(R, S, T, U, V, α)})#λ]
 
   implicit def Tuple7Apply[R: Monoid, S: Monoid, T: Monoid, U: Monoid, V: Monoid, W: Monoid]: Apply[({type λ[α]=(R, S, T, U, V, W, α)})#λ] = FunctorBindApply[({type λ[α]=(R, S, T, U, V, W, α)})#λ]
-    
+
   implicit def Function1Apply[R]: Apply[({type λ[α]=(R) => α})#λ] = FunctorBindApply[({type λ[α]=(R) => α})#λ]
 
   implicit def Function2Apply[R, S]: Apply[({type λ[α]=(R, S) => α})#λ] = FunctorBindApply[({type λ[α]=(R, S) => α})#λ]

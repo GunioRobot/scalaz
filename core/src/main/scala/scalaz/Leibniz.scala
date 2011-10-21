@@ -2,20 +2,20 @@ package scalaz
 
 import Scalaz.{⊥, ⊤}
 
-/** 
- * Leibnizian equality: A better =:= 
+/**
+ * Leibnizian equality: A better =:=
  *
- * This technique was first used in 
+ * This technique was first used in
  * <a href="http://portal.acm.org/citation.cfm?id=583852.581494">Typing Dynamic Typing</a> (Baars and Swierstra, ICFP 2002).
  *
  * It is generalized here to handle subtyping so that it can be used with constrained type constructors.
  *
  * Leibniz[L,H,A,B] says that A = B, and that both of its types are between L and H. Subtyping lets you
  * loosen the bounds on L and H.
- * 
+ *
  * If you just need a witness that A = B, then you can use A===B which is a supertype of any Leibniz[L,H,A,B]
  *
- * The more refined types are useful if you need to be able to substitute into restricted contexts. 
+ * The more refined types are useful if you need to be able to substitute into restricted contexts.
  */
 trait Leibniz[-L, +H >: L, A >: L <: H, B >: L <: H] {
   def subst[F[_ >: L <: H]](p: F[A]): F[B]
@@ -36,8 +36,8 @@ object Leibniz {
     def subst[F[_ >: A <: A]](p: F[A]): F[A] = p
   }
 
-  /** We can witness equality by using it to convert between types 
-   * We rely on subtyping to enable this to work for any Leibniz arrow 
+  /** We can witness equality by using it to convert between types
+   * We rely on subtyping to enable this to work for any Leibniz arrow
    */
   implicit def witness[A, B](f: A === B): A => B =
     f.subst[({type λ[X] = A => X})#λ](identity)
@@ -119,9 +119,9 @@ object Leibniz {
         a.subst[({type λ[X >: LA <: HA] = Leibniz[LT, HT, T[A, B, C], T[X, B, C]]})#λ](
           refl)))
 
-  /** 
-   * Unsafe coercion between types. force abuses asInstanceOf to explicitly coerce types. 
-   * It is unsafe, but needed where Leibnizian equality isn't sufficient 
+  /**
+   * Unsafe coercion between types. force abuses asInstanceOf to explicitly coerce types.
+   * It is unsafe, but needed where Leibnizian equality isn't sufficient
    */
   def force[L, H >: L, A >: L <: H, B >: L <: H]: Leibniz[L, H, A, B] = new Leibniz[L, H, A, B] {
     def subst[F[_ >: L <: H]](fa: F[A]): F[B] = fa.asInstanceOf[F[B]]

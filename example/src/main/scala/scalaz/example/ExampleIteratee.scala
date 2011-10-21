@@ -30,7 +30,7 @@ object ExampleIteratee {
     // As a monad
     val m1 = head[Int] >>= ((b:Option[Int]) => head[Int] map (b2 => (b <|*|> b2)))
     m1(Stream(1,2,3)).run assert_=== Some(1 -> 2)
-    
-    
+
+
   }
 }

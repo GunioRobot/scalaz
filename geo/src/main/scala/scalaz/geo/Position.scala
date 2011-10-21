@@ -21,5 +21,5 @@ object Position {
 
   implicit def PositionEqual: Equal[Position] = equalBy(((_: Position).coord) &&& ((_: Position).elevation))
 
-  implicit def PositionOrder: Order[Position] = orderBy(((_: Position).coord) &&& ((_: Position).elevation))  
+  implicit def PositionOrder: Order[Position] = orderBy(((_: Position).coord) &&& ((_: Position).elevation))
 }

@@ -4,7 +4,7 @@ trait Plus[P[_]] {
   def plus[A](a1: P[A], a2: => P[A]): P[A]
 }
 
-trait PlusLow {  
+trait PlusLow {
   implicit def TraversablePlus[CC[Y] <: collection.TraversableLike[Y, CC[Y]] : CanBuildAnySelf]: Plus[CC] = new Plus[CC] {
     def plus[X](s1: CC[X], s2: => CC[X]): CC[X] = {
       implicit val cbf = implicitly[CanBuildAnySelf[CC]].builder[X, X]

@@ -41,7 +41,7 @@ trait Foldable[F[_]] {
 trait FoldableLow {
  implicit def TraversableFoldable[CC[X] <: Traversable[X]]: Foldable[CC] = new Foldable[CC] {
     override def foldRight[A, B](t: CC[A], b: => B, f: (A, => B) => B): B = t.foldRight(b)(f(_, _))
-   
+
     override def foldLeft[A, B](t: CC[A], b: B, f: (B, A) => B): B = t.foldLeft(b)(f(_, _))
   }
 }
@@ -200,7 +200,7 @@ object Foldable extends FoldableLow {
     override def foldMap[A, M: Monoid](t: FingerTree[V, A], f: A => M): M = t foldMap f
     override def foldRight[A, B](t: FingerTree[V, A], b: => B, f: (A, => B) => B): B =
       t.fold(v => b,
-             (v, a) => f(a, b), 
+             (v, a) => f(a, b),
              (v, pr, m, sf) =>
                FingerFoldable[V].foldRight(pr,
                                            foldRight[Node[V, A], B](m,
@@ -209,7 +209,7 @@ object Foldable extends FoldableLow {
                                            f))
     override def foldLeft[A, B](t: FingerTree[V, A], b: B, f: (B, A) => B): B =
       t.fold(v => b,
-             (v, a) => f(b, a), 
+             (v, a) => f(b, a),
              (v, pr, m, sf) =>
                FingerFoldable[V].foldLeft(pr,
                                            foldLeft[Node[V, A], B](m,

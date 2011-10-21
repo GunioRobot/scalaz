@@ -63,7 +63,7 @@ object ImmutableArray {
     y.asInstanceOf[ImmutableArray[A]]
   }
 
-  def fromString(str: String): ImmutableArray[Char] = new StringArray(str) 
+  def fromString(str: String): ImmutableArray[Char] = new StringArray(str)
 
   def newBuilder[A](implicit elemManifest: ClassManifest[A]): Builder[A, ImmutableArray[A]] =
     ArrayBuilder.make[A]()(elemManifest).mapResult(make(_))

@@ -15,13 +15,13 @@ import Scalaz.{⊥, ⊤}
  * </p>
  */
 
-trait Hom { 
+trait Hom {
   type L
   type H>:L
   type C[_ >: L <: H, _ >: L <: H]
 }
 
-trait GeneralizedCategory { 
+trait GeneralizedCategory {
   type U <: Hom
   type =>:[A >: U#L <: U#H, B >: U#L <: U#H] = U#C[A, B]
 
@@ -33,12 +33,12 @@ trait GeneralizedCategory {
   def *[UY<:Hom](that : GeneralizedCategory {type U=UY}) = Category.ProductCategory[U,UY](this,that)
 }
 
-trait GeneralizedGroupoid extends GeneralizedCategory { 
+trait GeneralizedGroupoid extends GeneralizedCategory {
   def invert[A >: U#L <: U#H, B >: U#L <: U#H](f : A =>: B): B =>: A
 }
 
-trait Category[~>:[_,_]] extends GeneralizedCategory { 
-  trait U extends Hom { 
+trait Category[~>:[_,_]] extends GeneralizedCategory {
+  trait U extends Hom {
     type L = ⊥
     type H = ⊤
     type C[A, B] = ~>:[A, B]
@@ -51,7 +51,7 @@ object Category {
   import Scalaz._
   import Leibniz._
 
-  /* 
+  /*
    * Product Categories
    */
 
@@ -59,7 +59,7 @@ object Category {
   sealed trait P[+IX, +IY] { type _1 = IX; type _2 = IY }
 
   case class ProductCategory[UX <: Hom, UY <: Hom](
-    _1: GeneralizedCategory {type U = UX}, _2: GeneralizedCategory {type U = UY} 
+    _1: GeneralizedCategory {type U = UX}, _2: GeneralizedCategory {type U = UY}
   ) extends GeneralizedCategory with Hom {
     type _1 = _1.type
     type _2 = _2.type
@@ -92,11 +92,11 @@ object Category {
     def compose[A <: ⊥, B <: ⊥, C <: ⊥](m: M, n: M): M = monoid.append(m, n)
   }
   implicit def monoidCategory[M:Monoid] : MonoidCategory[M] = new MonoidCategory[M]
-  
+
   /** The <b>Set</b> category */
   implicit val Function1Category: Category[Function1] = new Category[Function1] {
     def id[A] = a => a
-    def compose[X, Y, Z](f: Y => Z, g: X => Y) = f compose g   
+    def compose[X, Y, Z](f: Y => Z, g: X => Y) = f compose g
   }
 
   implicit val `<:<_Category` : Category[<:<] = new Category[<:<] {
@@ -159,7 +159,7 @@ object Category {
 
   def endoFunctorInScala[F[_]](f: Functor[F]): GeneralizedFunctor[Function1, Function1, F] =
     new GeneralizedFunctor[Function1, Function1, F] {
-      def fmap[A, B](h: A => B): F[A] => F[B] = 
+      def fmap[A, B](h: A => B): F[A] => F[B] =
         f.fmap(_, h)
     }
 
@@ -210,7 +210,7 @@ object Category {
   type Alpha[Arr[_,_], X, Y] = ({type λ[α]=Arr[α, X]})#λ ~> ({type λ[α]=Arr[α, Y]})#λ
 
 
-  /** The Yoneda Lemma 
+  /** The Yoneda Lemma
   def yoneda[Arr[_,_]:Category, X, Y]: Iso[Function1, Alpha[Arr, X, Y], Arr[X, Y]] = {
     def to(alpha: Alpha[Arr, X, Y]): Arr[X, Y] = alpha(implicitly[Category[Arr]].id)
     def from(f: Arr[X, Y]): Alpha[Arr, X, Y] = new Alpha[Arr, X, Y] {
@@ -222,7 +222,7 @@ object Category {
 
   /** Fully faithful functors reflect isomorphisms */
   def reflectIso[A1[_,_], A2[_,_], F[_], A, B](implicit c1: Category[A1], c2: Category[A2], f: GeneralizedFunctor[A2, A1, F]):
-    (On[A1, F]#Apply <~~> A2) => Iso[A1, F[A], F[B]] => Iso[A2, A, B] = 
+    (On[A1, F]#Apply <~~> A2) => Iso[A1, F[A], F[B]] => Iso[A2, A, B] =
       (iso => { case Iso(to, from) => Iso(iso.to(to), iso.to(from)) })
 
   type GeneralAdjunction[P[_,_], Q[_,_], F[_], U[_]] = Biff[P, F, Id]#Apply <~~> Biff[Q, Id, U]#Apply
@@ -243,10 +243,10 @@ object Category {
 /*
     Iso3[~~>, Biff[Function1, Writer[S]#Apply, Id]#Apply, Biff[Function1, Id, Reader[S]#Apply]#Apply](
       new (Biff[Function1, Writer[S]#Apply, Id]#Apply ~~> Biff[Function1, Id, Reader[S]#Apply]#Apply) {
-        def apply[A,B](f: => ((S, A)) => B): A => S => B = 
+        def apply[A,B](f: => ((S, A)) => B): A => S => B =
           a => s => f.apply((s, a))
       }, new (Biff[Function1, Id, Reader[S]#Apply]#Apply ~~> Biff[Function1, Writer[S]#Apply, Id]#Apply) {
-        def apply[A,B](f: => A => S => B): ((S, A)) => B = 
+        def apply[A,B](f: => A => S => B): ((S, A)) => B =
           p => f.apply(p._2)(p._1)
       })
 */
@@ -266,10 +266,10 @@ object Category {
 
   implicit def CokleisliCategory[M[_]: Comonad]: Category[({type λ[α, β]=Cokleisli[M, α, β]})#λ] = new Category[({type λ[α, β]=Cokleisli[M, α, β]})#λ] {
     def id[A] = ★(_ copure)
-    def compose[X, Y, Z](f: Cokleisli[M, Y, Z], g: Cokleisli[M, X, Y]) = f =<= g 
+    def compose[X, Y, Z](f: Cokleisli[M, Y, Z], g: Cokleisli[M, X, Y]) = f =<= g
   }
 
-  /* Every monoid gives rise to a category 
+  /* Every monoid gives rise to a category
   implicit def MonoidCategory[M: Monoid] = new Category[PartialApply1Of3[Const2,M]#Apply] {
     def id[A] = Const2(implicitly[Zero[M]].zero)
     def compose[X, Y, Z](f: Const2[M, Y, Z], g: Const2[M, X, Y]) = Const2(f.value |+| g.value)
@@ -296,6 +296,6 @@ object Category {
     def id[A] = new Ord2[X, A, A]
     def compose[A, B, C](f: Ord2[X, B, C], g: Ord2[X, A, B]) = new Ord2[X, A, C] {
       override def compare(a: X, b: X) = f.compare(a, b) == g.compare(a, b)
-    } 
+    }
   }
 }

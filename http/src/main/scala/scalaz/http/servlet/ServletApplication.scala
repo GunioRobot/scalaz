@@ -36,7 +36,7 @@ abstract class ServletApplication[IN[_], OUT[_]](implicit i: InputStreamer[IN], 
   /**
    * The each for the contents of the response body.
    */
-  val each = e   
+  val each = e
 }
 
 /**

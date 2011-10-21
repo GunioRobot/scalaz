@@ -32,7 +32,7 @@ object Empty {
   implicit def EitherRightEmpty[X: Zero]: Empty[({type λ[α]=Either.RightProjection[X, α]})#λ] = new Empty[({type λ[α]=Either.RightProjection[X, α]})#λ] {
     def empty[A] = Left(∅).right
   }
-  
+
   implicit def TraversableEmpty[CC[X] <: TraversableLike[X, CC[X]] : CanBuildAnySelf]: Empty[CC] = new Empty[CC] {
     def empty[A] = {
       val builder = implicitly[CanBuildAnySelf[CC]].apply[⊥, A]

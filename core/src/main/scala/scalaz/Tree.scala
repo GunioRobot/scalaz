@@ -71,7 +71,7 @@ sealed trait Tree[+A] {
     (node(rootLabel._1, fst), node(rootLabel._2, snd))
   }
 }
-  
+
 trait Trees {
 
   object Node {

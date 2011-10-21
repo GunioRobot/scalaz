@@ -51,6 +51,6 @@ object ExampleEqual {
 
     assert(List(new Orange) ≟ List(new Orange))
 
-    //assert(List(new Orange) ≟ List(new Apple)) //does not compile  
+    //assert(List(new Orange) ≟ List(new Apple)) //does not compile
   }
 }

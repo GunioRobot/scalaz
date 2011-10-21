@@ -48,7 +48,7 @@ sealed trait Uri {
    * Returns the path extension - characters after the last dot (.) in the path.
    */
   lazy val pathExtension = path.dropWhile(_ != '.').reverse.takeWhile(_ != '.').reverse.mkString
-  
+
   lazy val parts : List[String] = {
     path.list.reverse.foldLeft(List[List[Char]](Nil))((rs, ch) => {
       if (ch == '/') { Nil :: rs } else { (ch :: rs.head)  :: rs.tail }

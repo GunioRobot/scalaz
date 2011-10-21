@@ -16,10 +16,10 @@ sealed trait Kleisli[M[_], A, B] {
   def compose[N[_]](f: M[B] => N[B]): Kleisli[N, A, B] = ☆((a: A) => f(this(a)))
 
   def traverse[F[_], AA <: A](f: F[AA])(implicit a: Applicative[M], t: Traverse[F]): M[F[B]] =
-    f ↦ (Kleisli.this(_)) 
+    f ↦ (Kleisli.this(_))
 
-  def =<<[AA <: A](a: M[AA])(implicit m: Bind[M]): M[B] = m.bind(a, apply _)  
-  
+  def =<<[AA <: A](a: M[AA])(implicit m: Bind[M]): M[B] = m.bind(a, apply _)
+
   def map[C](f: B => C)(implicit m: Functor[M]): Kleisli[M, A, C] =
     kleisli(a => m.fmap(apply(a), f))
 

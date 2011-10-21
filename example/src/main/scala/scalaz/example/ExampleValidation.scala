@@ -117,7 +117,7 @@ object ExampleValidation {
     val lines = text.lines.toList
     def parseInt(s: String): ValidationNEL[String, Int] = {
       val projection: FailProjection[String, Int] = s.parseInt.fail ∘ (_.toString)
-      // todo this can't be inferred if Pure is invariant. Why not? 
+      // todo this can't be inferred if Pure is invariant. Why not?
       projection.lift[NonEmptyList, String]
     }
     val listVals: List[ValidationNEL[String, Int]] = lines.map(parseInt(_))
